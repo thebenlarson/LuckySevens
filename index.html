@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet"> 
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css">
+        <style>
+            .carousel-centered{margin-top: 5%;}
+            .invert{color: lightgoldenrodyellow;}
+            .base-background{background-color: black;}
+            tbody tr:nth-child(even) {background: lightgoldenrodyellow; color: black}
+            tbody tr:nth-child(odd) {background: black; color: lightgoldenrodyellow;}
+        </style>
+        <title>Lucky Sevens</title>
+    </head>
+
+    <body>
+        <main style="background-color: lightgoldenrodyellow">
+            <div class="base-background">
+                <header class="jumbotron base-background">
+                    <h1 class="invert text-center">Lucky Sevens</h1>
+                    <h4 class="invert text-center">Play at your own risk!</h2>
+                </header>
+                <hr/>
+            </div>
+                <section class="container" style="min-height: 700px;">
+                    <div class="row">
+                        <div class="col-md-12 text-center"><h1>Lucky Sevens</h1></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right"><h2>Starting Bet: $</h2></div>
+                        <div class="col-md-6">
+                            <input id="input" type="number" value="0.00" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <a class="btn btn-primary" onclick="play()" style="color: lightgoldenrodyellow; margin: auto; min-width: 150px;;">PLAY</a>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div id="results" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-12 text-center"><h1>Results( click "Play" to play again)</h1></div>
+                        </div>
+                        <div class="row">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Starting Bet</th>
+                                            <td id="starting_bet">$3.00</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Total Rows Before Going Broke</th>
+                                            <td id="rolls_before_broke">$1.25</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Highest Amount Won</th>
+                                            <td id="highest_amount_won">$1.00</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Roll Count at Highest Amount</th>
+                                            <td id="roll_highest_amount">$1.25</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </div>
+                    </div>
+                    
+                </section>
+
+                <footer class="page-footer font-small blue pt-4" style="background-color: black">
+                    <div class="container-fluid text-center">
+                        <div class="row">
+                          <div class="col-md-3"></div>
+
+                          <div class="col-md-6">
+                            <h5 class="invert">Press your Luck!</h5>
+                          </div>
+
+                          <div class="col-md-3"></div>              
+                        </div>                      
+                    </div>                      
+                </footer>
+        </main>
+
+
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script>
+            let input = $("#input")[0];
+            let startingBet = $("#input")[0].value;
+            let gameMoney = 0;
+            let rollsBeforeBroke = 0;
+            let highestAmountWon = 0;
+            let rollHighestAmount = 0;
+
+            function play(){
+                startingBet = Number(input.value);
+                if (startingBet > 0){
+                    gameMoney = startingBet;
+                    rollsBeforeBroke = 0;
+                    rollHighestAmount = 0;
+                    highestAmountWon = gameMoney;
+
+                    while (gameMoney > 0){
+                        //roll 2 die
+                        rollsBeforeBroke++;
+                        let die1 = rollDice(6);
+                        let die2 = rollDice(6);
+
+                        if (die1 + die2 == 7){
+                            gameMoney += 4;
+
+                            if (gameMoney > highestAmountWon){
+                                highestAmountWon = gameMoney;
+                                rollHighestAmount = rollsBeforeBroke;
+                            }
+
+                        } else {
+                            gameMoney -= 1;
+                        }
+                    } 
+                    //end game and display data
+                    $("#starting_bet")[0].textContent = "$" + startingBet + ".00";
+                    $("#rolls_before_broke")[0].textContent = rollsBeforeBroke;
+                    $("#highest_amount_won")[0].textContent = "$" + highestAmountWon + ".00";
+                    $("#roll_highest_amount")[0].textContent = rollHighestAmount;
+                    $("#results").show();
+                } else {
+                    alert("Starting bet is less than or equal to zero. Please try again");
+                }
+            }
+
+            function rollDice(numSides) {
+                return Math.floor(Math.random() * numSides) + 1;
+            }
+
+        </script>
+    </body>
+</html>
